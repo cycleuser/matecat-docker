@@ -1,6 +1,21 @@
 #!/bin/bash
 
 if [ ! -d "/var/www/MateCat-Filters/" ]; then
+    # 配置Maven使用阿里云镜像
+    mkdir -p ~/.m2
+    cat > ~/.m2/settings.xml << EOF
+<settings>
+    <mirrors>
+        <mirror>
+            <id>aliyun</id>
+            <name>Aliyun Maven</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <mirrorOf>central</mirrorOf>
+        </mirror>
+    </mirrors>
+</settings>
+EOF
+
     echo "Build okapi"
     git clone https://bitbucket.org/okapiframework/okapi.git /var/www/okapi
     cd /var/www/okapi/

@@ -41,5 +41,10 @@ cd /usr/local && tar --strip-components 1 -xzf $DIR/$VER
 
 rm $DIR/$VER
 
+# 配置npm使用淘宝镜像
+npm config set registry https://registry.npmmirror.com
+npm config set disturl https://npmmirror.com/dist
+npm config set sass_binary_site https://npmmirror.com/mirrors/node-sass
+
 echo "Finished installing!"
 

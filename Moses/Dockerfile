@@ -3,6 +3,10 @@ FROM ubuntu:latest
 MAINTAINER Duyet Le <me@duyet.net>
 LABEL description="Basic Moses docker container for Ubuntu"
 
+# 更换apt源为TUNA镜像源
+RUN sed -i 's/archive.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list && \
+    sed -i 's/security.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list
+
 # Update Ubuntu.
 RUN apt-get update
 RUN apt-get install -y apt-utils debconf-utils

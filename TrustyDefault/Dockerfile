@@ -1,5 +1,9 @@
 FROM ubuntu:trusty
 
+# 更换apt源为TUNA镜像源
+RUN sed -i 's/archive.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list && \
+    sed -i 's/security.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list
+
 RUN apt-get update
 RUN apt-get -y --fix-missing install ssh-client vim locate iputils-ping monit git curl wget net-tools \
     apache2 php5 php5-json php5-curl php5-xdebug php5-mysql mysql-client openssh-server psmisc screen dstat \
