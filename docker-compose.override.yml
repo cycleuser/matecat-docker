@@ -2,18 +2,48 @@ version: '2'
 
 services:
   filters:
+    build:
+      context: ./MateCatFilters/
+      args:
+        - HTTP_PROXY=http://192.168.56.1:7890
+        - HTTPS_PROXY=http://192.168.56.1:7890
+        - NO_PROXY=localhost,127.0.0.1
     environment:
       - HTTP_PROXY=http://192.168.56.1:7890
       - HTTPS_PROXY=http://192.168.56.1:7890
       - NO_PROXY=localhost,127.0.0.1
 
   matecat:
+    build:
+      context: ./MateCatApache/
+      args:
+        - HTTP_PROXY=http://192.168.56.1:7890
+        - HTTPS_PROXY=http://192.168.56.1:7890
+        - NO_PROXY=localhost,127.0.0.1
+    environment:
+      - HTTP_PROXY=http://192.168.56.1:7890
+      - HTTPS_PROXY=http://192.168.56.1:7890
+      - NO_PROXY=localhost,127.0.0.1
+
+  mysql:
+    build:
+      context: ./MySQL/
+      args:
+        - HTTP_PROXY=http://192.168.56.1:7890
+        - HTTPS_PROXY=http://192.168.56.1:7890
+        - NO_PROXY=localhost,127.0.0.1
     environment:
       - HTTP_PROXY=http://192.168.56.1:7890
       - HTTPS_PROXY=http://192.168.56.1:7890
       - NO_PROXY=localhost,127.0.0.1
 
   mosesdecoder:
+    build:
+      context: ./Moses/
+      args:
+        - HTTP_PROXY=http://192.168.56.1:7890
+        - HTTPS_PROXY=http://192.168.56.1:7890
+        - NO_PROXY=localhost,127.0.0.1
     environment:
       - HTTP_PROXY=http://192.168.56.1:7890
       - HTTPS_PROXY=http://192.168.56.1:7890
