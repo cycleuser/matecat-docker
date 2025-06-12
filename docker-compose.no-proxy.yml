@@ -1,0 +1,61 @@
+version: '2'
+
+networks:
+  matecat-network:
+    driver: bridge
+
+services:
+  filters:
+    build: ./MateCatFilters/
+    container_name: docker_matecat_filter
+    expose:
+      - 8732
+    networks:
+       - matecat-network
+
+  redis:
+    image: redis
+    expose:
+      - 6379
+    networks:
+       - matecat-network
+
+  amq:
+    image: webcenter/activemq:latest
+    expose:
+      - 61613
+      - 61616
+      - 8161
+    networks:
+       - matecat-network
+       
+  mysql:
+    build: ./MySQL/
+    container_name: docker_mysql
+    expose:
+     - 3306
+    networks:
+       - matecat-network
+
+  mosesdecoder:
+    build: ./Moses/
+    expose:
+     - 8080
+    networks:
+     - matecat-network
+
+  matecat:
+    build: ./MateCatApache/
+    container_name: docker_matecat
+    volumes:
+      - ~/matecat:/var/www/matecat:rw
+    ports:
+      - 80
+    networks:
+       - matecat-network
+    links:
+      - mysql
+      - redis
+      - amq
+      - filters
+      - mosesdecoder 

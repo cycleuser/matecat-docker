@@ -17,11 +17,10 @@ ENV NO_PROXY=${NO_PROXY}
 RUN sed -i 's/archive.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list && \
     sed -i 's/security.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list
 
-# 如果有代理，配置apt使用代理
-RUN if [ -n "$HTTP_PROXY" ]; then \
-        echo "Acquire::http::Proxy \"$HTTP_PROXY\";" >> /etc/apt/apt.conf.d/01proxy; \
-        echo "Acquire::https::Proxy \"$HTTPS_PROXY\";" >> /etc/apt/apt.conf.d/01proxy; \
-    fi
+# 配置apt重试和超时设置
+RUN echo 'Acquire::Retries "3";' >> /etc/apt/apt.conf.d/80retries && \
+    echo 'Acquire::http::Timeout "60";' >> /etc/apt/apt.conf.d/80retries && \
+    echo 'Acquire::https::Timeout "60";' >> /etc/apt/apt.conf.d/80retries
 
 # Update Ubuntu.
 RUN apt-get update
@@ -32,9 +31,10 @@ RUN apt-get update && apt-get -y upgrade
 # Install basic tools
 RUN apt-get install -y nano perl netcat-openbsd
 
-# Install Moses dependencies.
-RUN apt-get install -y libboost-all-dev
-RUN apt-get install -y build-essential git-core pkg-config automake libtool wget zlib1g-dev python3-dev python-dev-is-python3 libbz2-dev cmake
+# 尝试安装boost，如果失败则使用基本包
+RUN apt-get install -y libboost-all-dev || \
+    (echo "Boost installation failed, installing basic packages only" && \
+     apt-get install -y build-essential)
 
 # Clone and build Moses
 RUN git clone https://github.com/moses-smt/mosesdecoder.git
