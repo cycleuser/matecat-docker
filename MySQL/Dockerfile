@@ -20,15 +20,11 @@ RUN if [ -n "$HTTP_PROXY" ]; then \
         echo "Acquire::https::Proxy \"$HTTPS_PROXY\";" >> /etc/apt/apt.conf.d/01proxy; \
     fi
 
-# 使用多个密钥服务器尝试获取密钥
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 5072E1F5 || \
-    apt-key adv --keyserver hkp://pgp.mit.edu:80 --recv-keys 5072E1F5 || \
-    apt-key adv --keyserver hkp://keys.gnupg.net:80 --recv-keys 5072E1F5
-
-RUN echo "deb http://repo.mysql.com/apt/ubuntu/ trusty mysql-5.7" >> /etc/apt/sources.list.d/mysql.list
-RUN echo "deb http://repo.mysql.com/apt/ubuntu/ trusty connector-python-2.0" >> /etc/apt/sources.list.d/mysql.list
-RUN apt-get update
-RUN apt-get install -y mysql-server
+# 更新包列表并安装MySQL（使用Ubuntu默认源）
+RUN apt-get update && \
+    echo "mysql-server mysql-server/root_password password admin" | debconf-set-selections && \
+    echo "mysql-server mysql-server/root_password_again password admin" | debconf-set-selections && \
+    apt-get install -y mysql-server mysql-client
 
 COPY run.sh /tmp/run.sh
 RUN chmod +x /tmp/run.sh
