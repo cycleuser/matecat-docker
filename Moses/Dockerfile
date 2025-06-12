@@ -24,10 +24,8 @@ RUN apt-get install -y build-essential git-core pkg-config automake libtool wget
 RUN git clone https://github.com/moses-smt/mosesdecoder.git
 WORKDIR /mosesdecoder
 
-# 创建build目录并使用cmake构建
-RUN mkdir build && cd build && \
-    cmake .. && \
-    make -j4
+# 简单构建Moses - 只编译核心组件
+RUN make -j4
 
 # Download sample model
 RUN wget http://www.statmt.org/moses/download/sample-models.tgz && tar xzf sample-models.tgz
