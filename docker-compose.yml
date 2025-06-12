@@ -38,9 +38,9 @@ services:
        - matecat-network
 
   mosesdecoder:
-    build: ./Moses/
+    image: duyet/moses
     expose:
-     - 8000
+     - 8080
     networks:
      - matecat-network
 
