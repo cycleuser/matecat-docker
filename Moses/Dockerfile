@@ -20,16 +20,16 @@ RUN apt-get install -y nano perl
 RUN apt-get install -y libboost-all-dev
 RUN apt-get install -y build-essential git-core pkg-config automake libtool wget zlib1g-dev python3-dev python-dev-is-python3 libbz2-dev cmake
 
-# Clone the repos we need.
+# Clone and build Moses
 RUN git clone https://github.com/moses-smt/mosesdecoder.git
-
-# Install Moses.
-WORKDIR /mosesdecoder
-RUN make -f /mosesdecoder/contrib/Makefiles/install-dependencies.gmake
-RUN /mosesdecoder/compile.sh  --max-kenlm-order=20 --max-factors=1000
 WORKDIR /mosesdecoder
 
-# Sample model
+# 创建build目录并使用cmake构建
+RUN mkdir build && cd build && \
+    cmake .. && \
+    make -j4
+
+# Download sample model
 RUN wget http://www.statmt.org/moses/download/sample-models.tgz && tar xzf sample-models.tgz
 
 EXPOSE 8080
